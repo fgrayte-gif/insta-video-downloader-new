@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Insta Downloader</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      padding: 50px;
+      background: #111;
+      color: white;
+    }
+    input {
+      width: 300px;
+      padding: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      background: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    img {
+      margin-top: 20px;
+      max-width: 300px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Instagram Video Downloader</h1>
+
+<input type="text" id="url" placeholder="Paste Instagram link">
+<br><br>
+<button onclick="download()">Download</button>
+
+<div id="result"></div>
+
+<script>
+async function download() {
+  const url = document.getElementById("url").value;
+
+  const res = await fetch("/api/download", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({url})
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    document.getElementById("result").innerHTML = `
+      <h3>${data.title}</h3>
+      <img src="${data.thumbnail}" />
+      <br><br>
+      <a href="${data.download_url}" download>
+        <button>Download Video</button>
+      </a>
+    `;
+  } else {
+    alert("Error");
+  }
+}
+</script>
+
+</body>
+</html>
